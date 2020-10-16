@@ -59,7 +59,6 @@ firebase.initializeApp(environment.firebaseConfig);
     ProfileComponent,
     LocationComponent,
     AddBookComponent,
-    YourBooksComponent,
     BookDialogComponent,
     MyBooksComponent,
     ChatsComponent,
