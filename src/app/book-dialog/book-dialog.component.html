@@ -2,19 +2,19 @@
 
 <mat-dialog-content>
   <div fxLayout="column">
-    <div fxFlex="20" *ngFor="let item of items; let i=index; " style="margin-top: 1em;">
-      <div fxLayout="row" (click)="RowSelected(item)" [ngClass]="['divStyle']" [mat-dialog-close]="true">
-        <div fxFlex="10" fxFlex.xs="20"><img src='{{ item.volumeInfo.imageLinks.thumbnail }}' style="width: 100%;">
+    <div fxFlex="20" *ngFor="let book of books " style="margin-top: 1em;">
+      <div fxLayout="row" (click)="RowSelected(book)" [mat-dialog-close]="true">
+        <div fxFlex="10" fxFlex.xs="20"><img src='{{ book.imageLink }}' style="width: 100%;">
         </div>
         <div fxFlex=3></div>
         <div fxFlex="70" fxLayout="column" fxLayoutAlign="space-evenly">
           <div class="book-title" fxLayout="row" [ngStyle.xs]="{'font-size':'0.9em'}">
             <span fxFlex="26" fxFlex.xs="38">Book name:</span>
-            <span fxFlex="80">{{ item.volumeInfo.title }}</span>
+            <span fxFlex="80">{{ book.title }}</span>
           </div>
           <div class="author-name" fxLayout="row" [ngStyle.xs]="{'font-size':'0.9em'}">
             <span fxFlex="26" fxFlex.xs="38">Author:</span>
-            <span fxFlex="80">{{ item.volumeInfo.authors }} </span>
+            <span fxFlex="80">{{ book.authors }} </span>
           </div>
         </div>
       </div>
