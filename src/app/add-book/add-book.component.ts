@@ -18,17 +18,11 @@ interface Genre {
 })
 export class AddBookComponent implements OnInit {
 
-  isbn: string;
-  title: string;
-  authors: [];
-  genre: string;
-  description: string;
   imageLink: string = '../../assets/images/book.svg';
   search_keyword: string;
-  items;
-  rating;
   display = false;
   bookForm;
+  rating;
   books=[];
   genres: Genre[] = [
     { value: 'Biography', viewValue: 'Biography' },
