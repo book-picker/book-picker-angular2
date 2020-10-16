@@ -38,10 +38,12 @@ import { ProfileComponent } from './profile/profile.component';
 import { LocationComponent } from './location/location.component';
 import { AddBookComponent } from './add-book/add-book.component';
 import { GlobalBooks } from './global-books';
+import { MatDialogModule } from '@angular/material/dialog';
+import { BookDialogComponent } from './book-dialog/book-dialog.component';
+import { CommonModule } from '@angular/common';
 import { MyBooksComponent } from './my-books/my-books.component';
 import { ChatsComponent } from './chats/chats.component';
 import { NotificationsComponent } from './notifications/notifications.component';
-
 
 firebase.initializeApp(environment.firebaseConfig);
 
@@ -57,11 +59,16 @@ firebase.initializeApp(environment.firebaseConfig);
     ProfileComponent,
     LocationComponent,
     AddBookComponent,
+    YourBooksComponent,
+    BookDialogComponent,
     MyBooksComponent,
     ChatsComponent,
     NotificationsComponent,
   ],
   imports: [
+    CommonModule,
+    BrowserAnimationsModule,
+    MatDialogModule,
     ReactiveFormsModule,
     MatProgressBarModule,
     FormsModule,
