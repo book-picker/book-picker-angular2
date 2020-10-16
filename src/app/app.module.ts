@@ -3,8 +3,9 @@ import { NgModule } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatSelectModule} from '@angular/material/select';
+
 import { MatButtonModule} from '@angular/material/button'
+import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSidenavModule} from '@angular/material/sidenav';
@@ -36,13 +37,14 @@ import { SelectGenreComponent } from './select-genre/select-genre.component';
 import { ProfileComponent } from './profile/profile.component';
 import { LocationComponent } from './location/location.component';
 import { AddBookComponent } from './add-book/add-book.component';
-import { YourBooksComponent } from './your-books/your-books.component';
-import { SettingsComponent } from './settings/settings.component';
 import { GlobalBooks } from './global-books';
 import { MatDialogModule } from '@angular/material/dialog';
-import { from } from 'rxjs';
 import { BookDialogComponent } from './book-dialog/book-dialog.component';
-import { CommonModule } from '@angular/common'; 
+import { CommonModule } from '@angular/common';
+import { MyBooksComponent } from './my-books/my-books.component';
+import { ChatsComponent } from './chats/chats.component';
+import { NotificationsComponent } from './notifications/notifications.component';
+
 firebase.initializeApp(environment.firebaseConfig);
 
 @NgModule({
@@ -58,8 +60,10 @@ firebase.initializeApp(environment.firebaseConfig);
     LocationComponent,
     AddBookComponent,
     YourBooksComponent,
-    SettingsComponent,
     BookDialogComponent,
+    MyBooksComponent,
+    ChatsComponent,
+    NotificationsComponent,
   ],
   imports: [
     CommonModule,

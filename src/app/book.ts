@@ -1,13 +1,13 @@
 export class Book {
-        mobile: string;
-        book:{
-            isbn: string;
-            title: string;
-            authors: [];
-            genre: string;
-            description: string;
-            imageLink:string;
-            rating:string;
+    title : string
+    authors: string[]
+    averageRating: string
+    imageLink: string
+    description: string
+    comments: [
+        {
+            'user' : string,
+            'comment': string
         }
-    
+    ]
 }

@@ -10,12 +10,14 @@ interface Genre {
   value: string;
   viewValue: string
 }
+
 @Component({
   selector: 'app-add-book',
   templateUrl: './add-book.component.html',
   styleUrls: ['./add-book.component.sass']
 })
 export class AddBookComponent implements OnInit {
+
   isbn: string;
   title: string;
   authors: [];

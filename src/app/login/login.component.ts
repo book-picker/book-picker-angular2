@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { GlobalVar } from '../global-var';
 
 export class WindowService {
 
@@ -24,7 +25,6 @@ interface City {
 export class LoginComponent implements OnInit {
 
   bar = false;
-  @Input() display;
   otp_sent : boolean = false;
   windowRef : any;
   otp: string;
@@ -34,7 +34,6 @@ export class LoginComponent implements OnInit {
   nick_div = false;
 
   win = new WindowService();
-  width = window.innerWidth;
   cities: City[] = [
     // {value: 'Select City', viewValue: 'Select City'},
     {value: 'Aurangabad', viewValue: 'Aurangabad'},
@@ -44,23 +43,19 @@ export class LoginComponent implements OnInit {
   ];
 
 
-  constructor( private route : Router, public authService : AuthService, public _http : HttpClient) {
+  constructor( private route : Router, public authService : AuthService, public _http : HttpClient, public gv : GlobalVar) {
 
    }
 
   ngOnInit(): void {
     if (localStorage.getItem('logOut') ==='true'){
       firebase.auth().signOut();
-      localStorage.removeItem('IsLoggedIn')
-      localStorage.removeItem('logOut')
+      localStorage.clear()
     }
     if (localStorage.getItem('IsLoggedIn') ===null || localStorage.getItem('IsLoggedIn') === 'undefined') {
     }else {
       this.route.navigate(['/home'])
     }
-    if( this.width<1200 ) {
-      this.display = true;
-    }else { this.display = false ;}
     this.windowRef = this.win.windowRef
     this.windowRef.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {'size':"invisible"})
 
@@ -71,14 +66,15 @@ export class LoginComponent implements OnInit {
       window.alert("please enter valid number")
       return
     }
-    this.bar = true
+    this.gv.bar = true
+    console.log(this.gv.bar)
     const appVerifier = this.windowRef.recaptchaVerifier;
     await this.authService.SendOtp('+91'+this.number, appVerifier);
     if (this.authService.windowRef.confirmationResult){
       this.otp_sent = true;
-      this.bar = false
+      this.gv.bar = false
     } else {
-      this.bar = false
+      this.gv.bar = false
     }
   }
   async VerifyOtp() {
@@ -86,10 +82,10 @@ export class LoginComponent implements OnInit {
       window.alert("please enter valid number")
       return
     }
-    this.bar = true
+    this.gv.bar = true
     await this.authService.VerifyOtp(this.otp);
     if (this.authService.loggedIn === true ) {
-      this.bar = false
+      this.gv.bar = false
       this.nick_div = true
       localStorage.setItem('number', this.number)
     }
