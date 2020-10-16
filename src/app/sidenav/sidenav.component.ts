@@ -23,6 +23,7 @@ export class SidenavComponent implements OnInit {
     {disabled : false, style : {}},
     {disabled : false, style : {}},
     {disabled : false, style : {}},
+    {disabled : false, style : {}},
   ]
   constructor(public router : Router) { }
 
