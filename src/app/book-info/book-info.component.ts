@@ -11,10 +11,10 @@ import { Book } from '../book';
 export class BookInfoComponent implements OnInit {
   num = [1,2,3,4,5,6]
   num_mob = [1,2,3]
-  isbn : String = "12345"
-  mobile : string = "8999326103"
+  isbn : String = "1234567890"
+  mobile : string = "1111111111"
   private sub : any
-  URL : string = "https://a2548a582ecc.ngrok.io"
+  URL : string = "https://b6db8e9f6443.ngrok.io"
   commentBox = false
   recommendations : Book[]
   book : Book

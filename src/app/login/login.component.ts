@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
   number : string
   nickname;
   nick_div = false;
-  URL = 'https://a2548a582ecc.ngrok.io'
+  URL = 'https://e03ed7bfd849.ngrok.io'
   
   win = new WindowService();
   cities: City[] = [
@@ -97,6 +97,7 @@ export class LoginComponent implements OnInit {
     if (this.authService.loggedIn === true ) {
       this.gv.bar = false
     }
+    console.log(this.authService.nickname)
     if(this.authService.nickname === "" ){    //first time login
       this.nick_div = true
     } else if(this.authService.nickname === undefined){  // for times when server is off
