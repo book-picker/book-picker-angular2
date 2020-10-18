@@ -16,7 +16,7 @@ export class ProfileComponent implements OnInit {
   }
   log_out() {
     localStorage.setItem('logOut', 'true')
-    localStorage.setItem('number','')
+    
   }
 
 }

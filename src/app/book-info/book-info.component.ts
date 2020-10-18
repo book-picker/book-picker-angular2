@@ -14,7 +14,7 @@ export class BookInfoComponent implements OnInit {
   isbn : String = "12345"
   mobile : string = "8999326103"
   private sub : any
-  URL : string = "http://7ba8e8cb0f2c.ngrok.io"
+  URL : string = "https://a2548a582ecc.ngrok.io"
   commentBox = false
   recommendations : Book[]
   book : Book
@@ -105,7 +105,7 @@ export class BookInfoComponent implements OnInit {
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
-    this.sub.unsubscribe()
+    // this.sub.unsubscribe()
   }
 
 

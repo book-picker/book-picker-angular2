@@ -4,6 +4,7 @@ import { GetBookService } from '../services/get-book.service';
 import { MatDialog } from '@angular/material/dialog';
 import { BookDialogComponent } from '../book-dialog/book-dialog.component';
 import { FormBuilder } from '@angular/forms';
+import { GlobalVar } from '../global-var';
 
 
 interface Genre {
@@ -40,10 +41,12 @@ export class AddBookComponent implements OnInit {
     public _http: HttpClient,
     public bookService: GetBookService,
     public dialog: MatDialog,
+    public gv : GlobalVar
 
   ) { }
 
   ngOnInit() {
+    this.gv.bar = false
     this.bookForm = this._fb.group({
       title : [''],
       authors: [['']],

@@ -2,10 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import * as firebase from 'firebase';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-
+import { GlobalVar } from '../global-var';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { stringify } from 'querystring';
-import { FormControl, FormGroup } from '@angular/forms';
+
 
 export class WindowService {
 
@@ -25,7 +24,12 @@ interface City {
 })
 export class LoginComponent implements OnInit {
 
-  bar = false;
+  constructor( private route : Router,
+    public authService : AuthService,
+    public _http : HttpClient,
+    public gv : GlobalVar) {}
+
+  
   @Input() display;
   otp_sent : boolean = false;
   windowRef : any;
@@ -34,7 +38,7 @@ export class LoginComponent implements OnInit {
   number : string
   nickname;
   nick_div = false;
-  URL = 'https://727ba2a379fc.ngrok.io'
+  URL = 'https://a2548a582ecc.ngrok.io'
   
   win = new WindowService();
   cities: City[] = [
@@ -45,19 +49,19 @@ export class LoginComponent implements OnInit {
     {value: 'Delhi', viewValue: 'Delhi'}
   ];
 
-  constructor( private route : Router, public authService : AuthService, public _http : HttpClient) {
-
-   }
+  
 
   ngOnInit(): void {
+    this.gv.bar = false
     if (localStorage.getItem('logOut') ==='true'){
       firebase.auth().signOut();
       localStorage.removeItem('IsLoggedIn')
       localStorage.removeItem('logOut')
       localStorage.removeItem('nickname')
+      localStorage.removeItem('number')
     }
     if (localStorage.getItem('IsLoggedIn') ===null || localStorage.getItem('IsLoggedIn') === 'undefined' ) {
-    }else if(localStorage.getItem('nickname') === null || localStorage.getItem('IsLoggedIn') === 'undefined') {
+    }else if(localStorage.getItem('nickname') === null || localStorage.getItem('nickname') === 'undefined') {
       this.nick_div = true
     }else {
       this.route.navigate(['/home'])
@@ -73,41 +77,32 @@ export class LoginComponent implements OnInit {
       window.alert("please enter valid number")
       return
     }
-    this.bar = true
+    this.gv.bar = true
     const appVerifier = this.windowRef.recaptchaVerifier;
     await this.authService.SendOtp('+91'+this.number, appVerifier);
     if (this.authService.windowRef.confirmationResult){
       this.otp_sent = true;
-      this.bar = false
+      this.gv.bar = false
     } else {
-      this.bar = false
+      this.gv.bar = false
     }
-    // localStorage.setItem('number', this.number)
-    // this.authService.login()
-    // if(this.authService.nickname === "" ){
-    //   this.nick_div = true
-    // } else{
-    //   localStorage.setItem('nickname',this.authService.nickname)
-    //   this.route.navigate(['/home'])
-    // }
   }
   async VerifyOtp() {
     if (this.otp === undefined || this.otp.toString().length < 6){
       window.alert("please enter valid number")
       return
     }
-    this.bar = true
+    this.gv.bar = true
     await this.authService.VerifyOtp(this.otp,this.number);
     if (this.authService.loggedIn === true ) {
-      this.bar = false
-      // localStorage.setItem('number', this.number)
+      this.gv.bar = false
     }
-    if(this.authService.nickname === "" ){
+    if(this.authService.nickname === "" ){    //first time login
       this.nick_div = true
-    } else if(this.authService.nickname === undefined){
+    } else if(this.authService.nickname === undefined){  // for times when server is off
       this.nick_div = true
     }
-    else{
+    else{                                         //not first time login, go to home
       this.nick_div = false
       localStorage.setItem('nickname',this.authService.nickname)
       console.log("to home")
@@ -115,24 +110,27 @@ export class LoginComponent implements OnInit {
     }
   }
   setNickname(){
-    
+    this.gv.bar = true
     let headers = new HttpHeaders({'Content-Type':'application/json'})
     this._http.post(this.URL + '/addNickname', JSON.stringify({'mobile':this.number,'nickname':this.nickname}), {headers:headers}).subscribe(
       Response => {
         
         console.log(Response)
         let res = JSON.parse(JSON.stringify(Response))
-        if(res.status === false){
+        if(res.status === false){         
           console.log('not unique')
           window.alert('This nickname is already taken. Please enter something else')
           this.nickname = ""
+          this.gv.bar = false
         } else if(res.status === true){
+          this.gv.bar = false
           localStorage.setItem('nickname', this.nickname)
           this.route.navigate(['/home'])
         }
       },
       Error => {
-        localStorage.setItem('nickname', this.nickname)
+        this.gv.bar = false
+        localStorage.setItem('nickname', this.nickname)   //for times when server is off; remove afterwards
         this.route.navigate(['/home'])
       }
     )
