@@ -6,7 +6,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./book-dialog.component.sass']
 })
 export class BookDialogComponent implements OnInit {
-  
 books=[];
 
 constructor(public dialogRef : MatDialogRef<BookDialogComponent>,

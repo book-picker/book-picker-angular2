@@ -2,9 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import * as firebase from 'firebase';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { GlobalVar } from '../global-var';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { GlobalVar } from '../global-var';
 
 export class WindowService {
 
@@ -24,93 +24,71 @@ interface City {
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private route: Router,
-    public authService: AuthService,
-    public _http: HttpClient,
-    public gv: GlobalVar) { }
-
-
-  @Input() display;
-  otp_sent: boolean = false;
-  windowRef: any;
+  bar = false;
+  otp_sent : boolean = false;
+  windowRef : any;
   otp: string;
-  user: any;
-  number: string
+  user : any;
+  number : string;
   nickname;
   nick_div = false;
-  URL = 'https://fe03b98581c2.ngrok.io'
 
   win = new WindowService();
   cities: City[] = [
     // {value: 'Select City', viewValue: 'Select City'},
-    { value: 'Aurangabad', viewValue: 'Aurangabad' },
-    { value: 'Mumbai', viewValue: 'Mumbai' },
-    { value: 'Pune', viewValue: 'Pune' },
-    { value: 'Delhi', viewValue: 'Delhi' }
+    {value: 'Aurangabad', viewValue: 'Aurangabad'},
+    {value: 'Mumbai', viewValue: 'Mumbai'},
+    {value: 'Pune', viewValue: 'Pune'},
+    {value: 'Delhi', viewValue: 'Delhi'}
   ];
 
 
+  constructor( private route : Router, public authService : AuthService, public _http : HttpClient, public gv : GlobalVar) {
+
+   }
 
   ngOnInit(): void {
     this.gv.bar = false
     if (localStorage.getItem('logOut') === 'true') {
       this.authService.LogOut()
     }
-    if (localStorage.getItem('IsLoggedIn') === null || localStorage.getItem('IsLoggedIn') === 'undefined') {
-    } else if (localStorage.getItem('change_nickname') === 'true') {
-      this.nick_div = true
-    } else {
+    if (localStorage.getItem('IsLoggedIn') ===null || localStorage.getItem('IsLoggedIn') === 'undefined') {
+    }else {
       this.route.navigate(['/home'])
     }
     this.windowRef = this.win.windowRef
-    this.windowRef.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { 'size': "invisible" })
+    this.windowRef.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {'size':"invisible"})
 
     this.windowRef.recaptchaVerifier.render()
   }
-  async SendOtp() {
-    console.log(this.number)
-    if (this.number === undefined || this.number.toString().length < 10) {
+  async SendOtp(){
+    if (this.number === undefined || this.number.toString().length < 10){
       window.alert("please enter valid number")
       return
     }
     this.gv.bar = true
+    console.log(this.gv.bar)
     const appVerifier = this.windowRef.recaptchaVerifier;
-    await this.authService.SendOtp('+91' + this.number, appVerifier);
-    if (this.authService.windowRef.confirmationResult) {
+    await this.authService.SendOtp('+91'+this.number, appVerifier);
+    if (this.authService.windowRef.confirmationResult){
       this.otp_sent = true;
       this.gv.bar = false
-      
     } else {
       this.gv.bar = false
-      window.alert("Check your internet Conection")
     }
   }
   async VerifyOtp() {
-    if (this.otp === undefined || this.otp.toString().length < 6) {
+    if (this.otp === undefined || this.otp.toString().length < 6){
       window.alert("please enter valid number")
       return
     }
     this.gv.bar = true
-    await this.authService.VerifyOtp(this.otp, this.number).then(
-      nickname => {
-        this.gv.bar = false
-        if (nickname === "" || nickname === undefined) { this.nick_div = true } else {
-          //not first time login, go to home
-          this.nick_div = false
-          localStorage.setItem('nickname', nickname)
-          localStorage.setItem('IsLoggedIn', 'true');
-          console.log("to home")
-          this.route.navigate(['/home'])
-        }
-      },
-      error => {
-        console.log(error)
-        this.nick_div = false
-        this.otp_sent = false
-        this.gv.bar = false
-        window.alert("Check your internet Conection")
-      }
-    )
+    await this.authService.VerifyOtp(this.otp);
+    if (this.authService.loggedIn === true ) {
+      this.gv.bar = false
+      this.nick_div = true
+      localStorage.setItem('number', this.number)
+    }
   }
   setNickname() {
     if(localStorage.getItem('nickname') != null || localStorage.getItem('nickname') != undefined) {
