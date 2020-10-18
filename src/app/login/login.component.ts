@@ -48,9 +48,9 @@ export class LoginComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.gv.bar = false
-    if (localStorage.getItem('logOut') === 'true') {
-      this.authService.LogOut()
+    if (localStorage.getItem('logOut') ==='true'){
+      firebase.auth().signOut();
+      localStorage.clear()
     }
     if (localStorage.getItem('IsLoggedIn') ===null || localStorage.getItem('IsLoggedIn') === 'undefined') {
     }else {
@@ -90,35 +90,8 @@ export class LoginComponent implements OnInit {
       localStorage.setItem('number', this.number)
     }
   }
-  setNickname() {
-    if(localStorage.getItem('nickname') != null || localStorage.getItem('nickname') != undefined) {
-      this.nickname = localStorage.getItem('nickname')
-    }
-    this.gv.bar = true
-    let headers = new HttpHeaders({ 'Content-Type': 'application/json' })
-    this._http.post(this.URL + '/addNickname', JSON.stringify({ 'mobile': this.number, 'nickname': this.nickname }), { headers: headers }).subscribe(
-      Response => {
-
-        console.log(Response)
-        let res = JSON.parse(JSON.stringify(Response))
-        if (res.status === false) {
-          console.log('not unique')
-          window.alert('This nickname is already taken. Please enter something else')
-          this.nickname = ""
-          this.gv.bar = false
-        } else if (res.status === true) {
-          this.gv.bar = false
-          localStorage.setItem('IsLoggedIn', 'true');
-          localStorage.setItem('nickname', this.nickname)
-          this.route.navigate(['/home'])
-        }
-      },
-      Error => {
-        this.gv.bar = false
-        localStorage.setItem('IsLoggedIn', 'true');
-        localStorage.setItem('nickname', this.nickname)   //for times when server is off; remove afterwards
-        this.route.navigate(['/home'])
-      }
-    )
+  setNickname(){
+    localStorage.setItem('nickname', this.nickname)
+    this.route.navigate(['/home'])
   }
 }
