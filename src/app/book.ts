@@ -16,7 +16,7 @@ export class Book {
     genre: String
     ilink : String
     addedTime: String    
-    rating : number
+    rating : string
 
 }
 

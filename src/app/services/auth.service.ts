@@ -14,7 +14,7 @@ export class WindowService {
 })
 export class AuthService {
   
-  URL = 'https://a2548a582ecc.ngrok.io'
+  URL = 'https://e03ed7bfd849.ngrok.io'
   win = new WindowService();
   windowRef;
   loggedIn = false;
@@ -35,11 +35,11 @@ export class AuthService {
   }
   async VerifyOtp(otp,number) {
     await this.windowRef.confirmationResult.confirm(otp).then(
-      user => {
+      async user => {
         this.loggedIn = true;
         localStorage.setItem('number', number);
         localStorage.setItem('IsLoggedIn', 'true');
-        this.login()
+        await this.login()
       }
     ).catch(error => {
       window.alert("Incorrect OTP");
@@ -72,15 +72,12 @@ export class AuthService {
     // const headers = new HttpHeaders({'content-type': 'application/json','Authorization':`Bearer ${this.token}`})
     const headers = new HttpHeaders({'Content-Type':'application/json'})
     
-    this.http_.post(this.URL + '/login', JSON.stringify({ 'mobile' : localStorage.getItem('number')}), {headers : headers}).subscribe (
-      Response => { 
+    await this.http_.post(this.URL + '/login', JSON.stringify({ 'mobile' : localStorage.getItem('number')}), {headers : headers}).toPromise ()
+      .then((Response)=> { 
         console.log(Response);
         let res = JSON.parse(JSON.stringify(Response)); 
         this.nickname = res.nickname;
-        
-      },
-      error => console.log(error)
-    )
-    console.log('header')
+      })    
+   
   }
 }
