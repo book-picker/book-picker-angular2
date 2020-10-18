@@ -58,8 +58,7 @@ export class AuthService {
   }
   LogOut() {
     firebase.auth().signOut()
-    localStorage.removeItem('IsLoggedIn');
-    localStorage.removeItem('nickname');
+    localStorage.clear()
   }
   GetToken(): Promise<string> {
     return new Promise((resolve, reject) => {

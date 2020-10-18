@@ -54,8 +54,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.gv.bar = false
     if (localStorage.getItem('logOut') === 'true') {
-      firebase.auth().signOut();
-      localStorage.clear()
+      this.authService.LogOut()
     }
     if (localStorage.getItem('IsLoggedIn') === null || localStorage.getItem('IsLoggedIn') === 'undefined') {
     } else if (localStorage.getItem('change_nickname') === 'true') {
@@ -114,6 +113,9 @@ export class LoginComponent implements OnInit {
     )
   }
   setNickname() {
+    if(localStorage.getItem('nickname') != null || localStorage.getItem('nickname') != undefined) {
+      this.nickname = localStorage.getItem('nickname')
+    }
     this.gv.bar = true
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' })
     this._http.post(this.URL + '/addNickname', JSON.stringify({ 'mobile': this.number, 'nickname': this.nickname }), { headers: headers }).subscribe(
