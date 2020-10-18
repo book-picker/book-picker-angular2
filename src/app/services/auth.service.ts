@@ -14,10 +14,11 @@ export class WindowService {
 })
 export class AuthService {
   
-  URL = 'https://8eb46a698f52.ngrok.io'
+  URL = 'https://727ba2a379fc.ngrok.io'
   win = new WindowService();
   windowRef;
   loggedIn = false;
+  nickname;
   token: string;
   constructor( public http_ : HttpClient) {
     this.windowRef = this.win.windowRef;
@@ -32,10 +33,11 @@ export class AuthService {
       console.log(error);
     });
   }
-  async VerifyOtp(otp) {
+  async VerifyOtp(otp,number) {
     await this.windowRef.confirmationResult.confirm(otp).then(
       user => {
         this.loggedIn = true;
+        localStorage.setItem('number', number);
         localStorage.setItem('IsLoggedIn', 'true');
         this.login()
       }
@@ -65,12 +67,20 @@ export class AuthService {
     })
   }
   async login() {
+    console.log("login")
     // await this.GetToken().then(token => { this.token = token})
     // const headers = new HttpHeaders({'content-type': 'application/json','Authorization':`Bearer ${this.token}`})
-    const headers = new HttpHeaders()
+    const headers = new HttpHeaders({'Content-Type':'application/json'})
+    
     this.http_.post(this.URL + '/login', JSON.stringify({ 'mobile' : localStorage.getItem('number')}), {headers : headers}).subscribe (
-      Response => console.log(Response),
+      Response => { 
+        console.log(Response);
+        let res = JSON.parse(JSON.stringify(Response)); 
+        this.nickname = res.nickname;
+        
+      },
       error => console.log(error)
     )
+    console.log('header')
   }
 }
