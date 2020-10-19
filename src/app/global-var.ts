@@ -7,4 +7,5 @@ export class GlobalVar {
     deviceMd: boolean = false;
     token: string;
     bar: boolean = false
+    URL = 'http://52.14.92.237:9000'
 }

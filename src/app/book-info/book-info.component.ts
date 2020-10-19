@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Book } from '../book';
+import { GlobalVar } from '../global-var';
 
 @Component({
   selector: 'app-book-info',
@@ -14,7 +15,6 @@ export class BookInfoComponent implements OnInit {
   isbn : String = "1234567890"
   mobile : string = "1111111111"
   private sub : any
-  URL : string = "http://52.14.92.237:9000"
   commentBox = false
   recommendations : Book[]
   book : Book
@@ -29,7 +29,8 @@ export class BookInfoComponent implements OnInit {
   authors: String[]
   constructor( 
     private route :  ActivatedRoute,
-    private http : HttpClient
+    private http : HttpClient,
+    public gv: GlobalVar,
   ) { }
 
   ngOnInit(): void {
@@ -53,7 +54,7 @@ export class BookInfoComponent implements OnInit {
     console.log("requesting")
     let headers = new HttpHeaders({'Content-Type':'application/json','Anonymous':'true'})
     // headers.append('Content-Type','application/json')
-    this.http.post( this.URL + "/getBook", JSON.stringify({'mobile' : this.mobile, 'isbn' : this.isbn}), {headers:headers}).subscribe(
+    this.http.post( this.gv.URL + "/getBook", JSON.stringify({'mobile' : this.mobile, 'isbn' : this.isbn}), {headers:headers}).subscribe(
       Response => {
         this.resp = true
         console.log(Response)
@@ -68,7 +69,7 @@ export class BookInfoComponent implements OnInit {
   async getRecommendations(){
     let headers = new HttpHeaders()
     headers.append('Content-Type','application/json')
-    this.http.post( this.URL, {mobile : this.mobile}, {headers:headers}).subscribe(
+    this.http.post( this.gv.URL, {mobile : this.mobile}, {headers:headers}).subscribe(
       Response => {
         let res = JSON.parse(JSON.stringify(Response))
         this.recommendations = res.body.recommendations
@@ -79,7 +80,7 @@ export class BookInfoComponent implements OnInit {
 
   addComment(){
     let headers = new HttpHeaders({'Content-Type':'application/json'})
-    this.http.post(this.URL + '/addComment', JSON.stringify({'comment': this.addedComment, 'mobile':this.mobile, 'isbn': this.isbn}), {headers:headers}).subscribe(
+    this.http.post(this.gv.URL + '/addComment', JSON.stringify({'comment': this.addedComment, 'mobile':this.mobile, 'isbn': this.isbn}), {headers:headers}).subscribe(
       Response => {
         let res = JSON.parse(JSON.stringify(Response))
         console.log(res)

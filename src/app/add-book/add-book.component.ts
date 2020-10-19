@@ -111,7 +111,7 @@ export class AddBookComponent implements OnInit {
       var Header = new HttpHeaders();
       console.log(this.bookForm.value)
       Header.append("Content-Type", "application/json").append('Cache-Control', 'no-cache');
-      this._http.post('http://52.14.92.237:9000/addBook', JSON.stringify(
+      this._http.post(this.gv.URL+'/addBook', JSON.stringify(
         {
           'mobile': '1111111111',
           'book': this.bookForm.value
@@ -132,6 +132,7 @@ export class AddBookComponent implements OnInit {
         (error)=>  {
           this.gv.bar=false  
           if (error) {
+            console.log(error)
             window.alert("Please check your internet connection!")
           }
              
