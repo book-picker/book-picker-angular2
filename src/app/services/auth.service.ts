@@ -14,7 +14,7 @@ export class WindowService {
 })
 export class AuthService {
 
-  URL = 'https://fe03b98581c2.ngrok.io'
+  URL = 'http://52.14.92.237:9000'
   win = new WindowService();
   windowRef;
   loggedIn = false;

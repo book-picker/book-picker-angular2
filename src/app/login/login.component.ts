@@ -38,7 +38,6 @@ export class LoginComponent implements OnInit {
   number: string
   nickname;
   nick_div = false;
-  URL = 'https://fe03b98581c2.ngrok.io'
 
   win = new WindowService();
   cities: City[] = [
@@ -116,7 +115,7 @@ export class LoginComponent implements OnInit {
   setNickname() {
     this.gv.bar = true
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' })
-    this._http.post(this.URL + '/addNickname', JSON.stringify({ 'mobile': this.number, 'nickname': this.nickname }), { headers: headers }).subscribe(
+    this._http.post(this.gv.URL + '/addNickname', JSON.stringify({ 'mobile': this.number, 'nickname': this.nickname }), { headers: headers }).subscribe(
       Response => {
 
         console.log(Response)
