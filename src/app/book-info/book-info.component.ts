@@ -14,7 +14,7 @@ export class BookInfoComponent implements OnInit {
   isbn : String = "1234567890"
   mobile : string = "1111111111"
   private sub : any
-  URL : string = "https://b6db8e9f6443.ngrok.io"
+  URL : string = "http://52.14.92.237:9000"
   commentBox = false
   recommendations : Book[]
   book : Book

@@ -111,7 +111,7 @@ export class AddBookComponent implements OnInit {
       var Header = new HttpHeaders();
       console.log(this.bookForm.value)
       Header.append("Content-Type", "application/json").append('Cache-Control', 'no-cache');
-      this._http.post('https://fe03b98581c2.ngrok.io/addBook', JSON.stringify(
+      this._http.post('http://52.14.92.237:9000/addBook', JSON.stringify(
         {
           'mobile': '1111111111',
           'book': this.bookForm.value
