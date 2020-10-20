@@ -24,7 +24,7 @@
         <div fxFlex="12" fxFlex.xs="5"></div>
         <div fxFlex="76" fxFlex.xs="90" fxLayout="column" style="margin-top: 3%;">
           <div fxHide.sm="true" fxHide.xs="true" fxLayout="row" dir="rtl">
-            <p class="font" style="font-size: 1.3em; text-decoration: underline;">{{head}}</p>
+            <p class="font" style="font-size: 1.3em; text-decoration: underline; cursor: pointer;" (click)="clickedHead()">{{head}}</p>
           </div>
           <div fxFlex.lg="23" fxFlex.xs="5" fxFlex.sm="5" fxLayout="column"></div>
           <div fxFlex.lg="22" fxFlex="25" fxFlex.sm="18" fxLayout="column" fxLayoutGap="5%">

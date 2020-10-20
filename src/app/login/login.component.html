@@ -16,12 +16,12 @@
         <div fxFlex fxLayout="row">
           <div fxHide fxShow.xs fxFlex="6"></div>
           <div fxFlex fxLayout="column" fxLayoutGap.xs="6%" fxLayoutGap="4%">
-            <div fxLayout="row" fxLayoutAlign="start end" fxFlex.xs="7" fxFlex="10">
+            <div fxLayout="row" fxLayoutAlign="start end" fxFlex.xs="7" fxFlex="8">
               <span *ngIf="!otp_sent && !nick_div" class="text">Login through phone</span>
               <span *ngIf="otp_sent && !nick_div" class="text">Enter OTP</span>
               <span  *ngIf="nick_div" class="text">Nickname</span>
             </div>
-            <div fxLayout="row" fxFlex.xs="6" fxFlex="10">
+            <div fxLayout="row" fxFlex.xs="6" fxFlex="8">
               <input *ngIf="!otp_sent && !nick_div" [(ngModel)]="number" (keyup.enter)="SendOtp()" maxlength="10" fxFlex.xs="93" fxFlex="70" class="phone"
                   type="text" placeholder="Enter your phone number">
               <input *ngIf="otp_sent && !nick_div" [(ngModel)]="otp" (keyup.enter)="VerifyOtp()" maxlength="6" fxFlex.xs="93" fxFlex="70" class="phone" type="text"
@@ -29,7 +29,7 @@
               <input  *ngIf="nick_div" [(ngModel)]="nickname" (keyup.enter)="setNickname()" fxFlex.xs="93" fxFlex="70" class="phone" type="text"
                   placeholder="Enter a nickname for you">
             </div>
-            <div fxLayout="row" fxFlex.xs="6" fxFlex="10">
+            <div fxLayout="row" fxFlex.xs="6" fxFlex="8">
               <div [hidden]="true" id="recaptcha-container"></div>
               <button *ngIf="!otp_sent && !nick_div" mat-flat-button color="primary" (click)="SendOtp()" class="buttons">Get OTP</button>
               <button *ngIf="otp_sent && !nick_div" mat-flat-button color="primary" (click)="VerifyOtp()" class="buttons">Verify

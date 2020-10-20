@@ -46,4 +46,12 @@ export class LocationComponent implements OnInit {
 
   }
 
+  clickedHead(){
+    if(this.head === 'Login'){
+      this.router.navigate(['/login'])
+    } else if(this.head === localStorage.getItem('nickname')){
+      this.router.navigate(['/profile'])
+    }
+  }
+
 }
