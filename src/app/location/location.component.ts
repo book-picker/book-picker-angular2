@@ -13,6 +13,7 @@ interface City {
 export class LocationComponent implements OnInit {
 
   location;
+  head;
   cities: City[] = [
     // {value: 'Select City', viewValue: 'Select City'},
     {value: 'Aurangabad', viewValue: 'Aurangabad'},
@@ -32,6 +33,11 @@ export class LocationComponent implements OnInit {
      this.router.navigate(['/home']);
    }
   ngOnInit(): void {
+    if(localStorage.getItem('IsLoggedIn') === null || localStorage.getItem('IsLoggedIn') === undefined){
+      this.head = 'Login'
+    }else{
+      this.head = localStorage.getItem('nickname')
+    }
   }
 
   SelectOption(location) {

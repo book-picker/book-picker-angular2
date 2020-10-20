@@ -19,7 +19,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { QuoteComponent } from './quote/quote.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { GlobalVar } from './global-var';
@@ -51,7 +50,6 @@ firebase.initializeApp(environment.firebaseConfig);
   declarations: [
     AppComponent,
     LoginComponent,
-    QuoteComponent,
     HomepageComponent,
     SidenavComponent,
     BookInfoComponent,
