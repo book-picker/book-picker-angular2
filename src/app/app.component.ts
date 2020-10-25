@@ -7,7 +7,6 @@ import { GlobalVar } from './global-var';
 
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { Subscription } from 'rxjs';
-import { Meta } from '@angular/platform-browser';
 import { AuthService } from './services/auth.service';
 
 @Component({
@@ -147,13 +146,26 @@ export class AppComponent implements OnInit, OnDestroy {
             this.nav_bar = false;
             this.sidenav_visible = false;
           } else
-          if (this.current_url === '/profile' || this.current_url === '/add-book' || this.current_url === '/my-books' || this.current_url === '/chats' || this.current_url === '/notifications') {
+          if (this.current_url === '/profile' || this.current_url === '/add-book' || this.current_url === '/my-books' || this.current_url === '/notifications') {
             this.IsLoggedIn()
             if (this.gv.deviceXs){
               this.close()
             }
             this.menu_icon = true;
             this.color = "primary";
+            this.nav_bar = true;
+            this.sidenav_visible = true;
+            if (this.gv.deviceLg) {
+              this.opened = true;
+            }
+          } else
+          if (this.current_url === '/chats') {
+            this.IsLoggedIn()
+            if (this.gv.deviceXs){
+              this.close()
+            }
+            this.menu_icon = true;
+            this.color = "accent";
             this.nav_bar = true;
             this.sidenav_visible = true;
             if (this.gv.deviceLg) {

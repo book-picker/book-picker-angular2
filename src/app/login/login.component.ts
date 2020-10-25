@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import * as firebase from 'firebase';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { GlobalVar } from '../global-var';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import * as firebase from 'firebase'
 
 
 export class WindowService {
@@ -53,8 +53,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.gv.bar = false
     if (localStorage.getItem('logOut') === 'true') {
-      firebase.auth().signOut();
-      localStorage.clear()
+      this.authService.LogOut()
     }
     if (localStorage.getItem('IsLoggedIn') === null || localStorage.getItem('IsLoggedIn') === 'undefined') {
     } else if (localStorage.getItem('change_nickname') === 'true') {

@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
+import { GlobalVar } from '../global-var';
 export class WindowService {
 
   constructor() { }
@@ -13,14 +14,12 @@ export class WindowService {
   providedIn: 'root'
 })
 export class AuthService {
-
-  URL = 'http://52.14.92.237:9000'
   win = new WindowService();
   windowRef;
   loggedIn = false;
   nickname;
   token: string;
-  constructor(public http_: HttpClient) {
+  constructor(public http_: HttpClient, public gv: GlobalVar) {
     this.windowRef = this.win.windowRef;
   }
   ngOnInit() {
@@ -60,6 +59,7 @@ export class AuthService {
     firebase.auth().signOut()
     localStorage.removeItem('IsLoggedIn');
     localStorage.removeItem('nickname');
+    localStorage.removeItem('logOut')
   }
   GetToken(): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -81,7 +81,7 @@ export class AuthService {
     console.log("login")
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' })
 
-    return this.http_.post(this.URL + '/login', JSON.stringify({ 'mobile': localStorage.getItem('number') }), { headers: headers })
+    return this.http_.post(this.gv.URL + '/login', JSON.stringify({ 'mobile': localStorage.getItem('number') }), { headers: headers })
 
   }
 }
