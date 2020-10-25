@@ -7,4 +7,5 @@ export class GlobalVar {
     deviceMd: boolean = false;
     token: string;
     bar: boolean = false
+    URL = 'https://kind-liger-67.loca.lt'
 }

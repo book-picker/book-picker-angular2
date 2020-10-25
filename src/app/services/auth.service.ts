@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
+import { GlobalVar } from '../global-var';
 export class WindowService {
 
   constructor() { }
@@ -13,18 +14,17 @@ export class WindowService {
   providedIn: 'root'
 })
 export class AuthService {
-  
-  URL = 'https://8eb46a698f52.ngrok.io'
   win = new WindowService();
   windowRef;
   loggedIn = false;
+  nickname;
   token: string;
-  constructor( public http_ : HttpClient) {
+  constructor(public http_: HttpClient, public gv: GlobalVar) {
     this.windowRef = this.win.windowRef;
   }
   ngOnInit() {
   }
-  async SendOtp(ph_num, appVerifier) {
+  async SendOtp(ph_num, appVerifier) {    
     await firebase.auth().signInWithPhoneNumber(ph_num, appVerifier).then(result => {
       this.windowRef.recaptchaVerifier = appVerifier;
       this.windowRef.confirmationResult = result;
@@ -32,45 +32,56 @@ export class AuthService {
       console.log(error);
     });
   }
-  async VerifyOtp(otp) {
-    await this.windowRef.confirmationResult.confirm(otp).then(
-      user => {
-        this.loggedIn = true;
-        localStorage.setItem('IsLoggedIn', 'true');
-        this.login()
-      }
-    ).catch(error => {
-      window.alert("Incorrect OTP");
+  VerifyOtp(otp, number): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.windowRef.confirmationResult.confirm(otp).then(
+        user => {
+          this.loggedIn = true;
+          localStorage.setItem('number', number);
+          this.login().subscribe(
+            Response => {
+              console.log(Response);
+              let res = JSON.parse(JSON.stringify(Response));              
+              resolve(res.nickname)
+            },
+            error => {
+              console.log(error)
+              reject(error)
+            }
+          )
+        }
+      ).catch(error => {
+        window.alert("Incorrect OTP");
+      })
     })
   }
   LogOut() {
     firebase.auth().signOut()
     localStorage.removeItem('IsLoggedIn');
     localStorage.removeItem('nickname');
+    localStorage.removeItem('logOut')
   }
   GetToken(): Promise<string> {
     return new Promise((resolve, reject) => {
-      firebase.auth().onAuthStateChanged( user => {
+      firebase.auth().onAuthStateChanged(user => {
         if (user) {
           user.getIdToken().then(idToken => {
-            resolve(idToken);    
+            resolve(idToken);
           });
         }
       },
-      error => {
-        console.log(error);
-        reject(error);
-      }
+        error => {
+          console.log(error);
+          reject(error);
+        }
       );
     })
   }
-  async login() {
-    // await this.GetToken().then(token => { this.token = token})
-    // const headers = new HttpHeaders({'content-type': 'application/json','Authorization':`Bearer ${this.token}`})
-    const headers = new HttpHeaders()
-    this.http_.post(this.URL + '/login', JSON.stringify({ 'mobile' : localStorage.getItem('number')}), {headers : headers}).subscribe (
-      Response => console.log(Response),
-      error => console.log(error)
-    )
+  login() {
+    console.log("login")
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' })
+
+    return this.http_.post(this.gv.URL + '/login', JSON.stringify({ 'mobile': localStorage.getItem('number') }), { headers: headers })
+
   }
 }

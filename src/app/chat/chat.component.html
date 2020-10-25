@@ -1,0 +1,33 @@
+<div *ngIf="display" fxFill style="padding-top: 5%;" fxLayout="column">
+    <div fxLayout ="row" fxFlex="7">
+        <button (click)="back()" mat-icon-button>
+            <svg width="26" height="24" viewBox="0 0 26 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0.939341 10.9393C0.353554 11.5251 0.353554 12.4749 0.939341 13.0607L10.4853 22.6066C11.0711 23.1924 12.0208 23.1924 12.6066 22.6066C13.1924 22.0208 13.1924 21.0711 12.6066 20.4853L4.12132 12L12.6066 3.51472C13.1924 2.92893 13.1924 1.97919 12.6066 1.3934C12.0208 0.807611 11.0711 0.807611 10.4853 1.3934L0.939341 10.9393ZM26 10.5L2 10.5V13.5L26 13.5V10.5Z" fill="#4F4F4F"/>
+                </svg>                
+        </button>
+    </div>
+    <div *ngFor="let message of messages">
+      <div fxLayout="row" fxLayoutAlign="{{message.class}} center">
+        <div fxLayout="column" class="{{message.class}}" class="message-box" fxFlex.xs="70">
+          <div class="message">
+            {{message.message}}
+          </div>
+          <div class="time">
+            {{message.timestamp}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="newMessage w-100" fxLayout="row">
+    <div class="w-100" fxLayout="row" fxLayoutAlign="space-between">
+      <input class="message_input" placeholder="Type yout message here.." fxFlex="80" [(ngModel)]="newMessage">
+      <div class="send" (click)="sendmessage()" matRipple fxFlex="10" fxLayoutAlign="center center">
+          <svg fxFlex="45" width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M30 15L0 0L7.5 15H30Z" fill="white" />
+          <path d="M30 15L0 30L7.5 15L30 15Z" fill="white" />
+        </svg>
+      </div>
+    </div>
+  </div>
+  

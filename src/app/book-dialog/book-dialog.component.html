@@ -1,0 +1,33 @@
+<div mat-dialog-title class="dialog-title" [ngStyle.xs]="{'font-size':'1.6em'}">Select your book</div>
+
+<mat-dialog-content>
+  <div fxLayout="column">
+    <div fxFlex="20" *ngFor="let book of books " style="margin-top: 1em;">
+      <div fxLayout="row" (click)="RowSelected(book)" [mat-dialog-close]="true">
+        <div fxFlex="10" fxFlex.xs="20"><img src='{{ book.imageLink }}' style="width: 100%;">
+        </div>
+        <div fxFlex=3></div>
+        <div fxFlex="70" fxLayout="column" fxLayoutAlign="space-evenly">
+          <div class="book-title" fxLayout="row" [ngStyle.xs]="{'font-size':'0.9em'}">
+            <span fxFlex="26" fxFlex.xs="38">Book name:</span>
+            <span fxFlex="80">{{ book.title }}</span>
+          </div>
+          <div class="author-name" fxLayout="row" [ngStyle.xs]="{'font-size':'0.9em'}">
+            <span fxFlex="26" fxFlex.xs="38">Author:</span>
+            <span fxFlex="80">{{ book.authors }} </span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-action fxLayout="row">
+
+  <div fxFlex="80" class="note-for-user" fxLayoutAlign="end center">*If you didn't find your book,
+    then press the next button to proceed.</div>
+    <div fxFlex="5"></div>
+  <button  fxFlex="7" mat-flat-button class="btn-next"  fxLayoutAlign="end center" (click)="Next_button_pressed()" color="primary">Next</button>
+
+
+</mat-dialog-action>

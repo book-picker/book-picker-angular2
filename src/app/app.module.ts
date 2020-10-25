@@ -19,7 +19,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { QuoteComponent } from './quote/quote.component';
 import { HomepageComponent } from './homepage/homepage.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { GlobalVar } from './global-var';
@@ -38,18 +37,22 @@ import { ProfileComponent } from './profile/profile.component';
 import { LocationComponent } from './location/location.component';
 import { AddBookComponent } from './add-book/add-book.component';
 import { GlobalBooks } from './global-books';
+import { MatDialogModule } from '@angular/material/dialog';
+import { BookDialogComponent } from './book-dialog/book-dialog.component';
+import { CommonModule } from '@angular/common';
 import { MyBooksComponent } from './my-books/my-books.component';
 import { ChatsComponent } from './chats/chats.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 
-
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { ChatComponent } from './chat/chat.component';
 firebase.initializeApp(environment.firebaseConfig);
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    QuoteComponent,
     HomepageComponent,
     SidenavComponent,
     BookInfoComponent,
@@ -57,11 +60,19 @@ firebase.initializeApp(environment.firebaseConfig);
     ProfileComponent,
     LocationComponent,
     AddBookComponent,
+    BookDialogComponent,
     MyBooksComponent,
     ChatsComponent,
     NotificationsComponent,
+    ChatComponent,
   ],
   imports: [
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireModule,
+    AngularFirestoreModule,
+    CommonModule,
+    BrowserAnimationsModule,
+    MatDialogModule,
     ReactiveFormsModule,
     MatProgressBarModule,
     FormsModule,
