@@ -44,6 +44,9 @@ import { MyBooksComponent } from './my-books/my-books.component';
 import { ChatsComponent } from './chats/chats.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { ChatComponent } from './chat/chat.component';
 firebase.initializeApp(environment.firebaseConfig);
 
 @NgModule({
@@ -61,8 +64,12 @@ firebase.initializeApp(environment.firebaseConfig);
     MyBooksComponent,
     ChatsComponent,
     NotificationsComponent,
+    ChatComponent,
   ],
   imports: [
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireModule,
+    AngularFirestoreModule,
     CommonModule,
     BrowserAnimationsModule,
     MatDialogModule,
