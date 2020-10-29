@@ -13,6 +13,7 @@ import (
 
 //GetConnection is used to get a new connection of mongoDB client
 func GetConnection() *mongo.Client {
+	//clientOptions := options.Client().ApplyURI("mongodb+srv://bookpicker:BookPicker@cluster0.ewyoi.gcp.mongodb.net/new-bookpicker?retryWrites=true&w=majority")
 	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
 	Client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
@@ -39,9 +40,9 @@ func EnterMobile(mobile string) (bool, bool, string) {
 	}
 	count, err := countUserByID(ctx, conn, mobile)
 	if count == 1 {
-		Nickname, err := getNicknameByID(ctx, conn,mobile)
-		if err!=nil{
-			return false, false,""
+		Nickname, err := getNicknameByID(ctx, conn, mobile)
+		if err != nil {
+			return false, false, ""
 		}
 		return false, true, Nickname
 	}
@@ -76,7 +77,7 @@ func countUserByID(ctx context.Context, conn *mongo.Client, id string) (int16, e
 }
 
 //EnterBookData is used to add the book data to the mongod server
-func EnterBookData(ID string, BookData *structure.BookData) (string, bool) {
+func EnterBookData(ID string, BookData *structure.AddBookData) (string, bool) {
 	var bookCount structure.BookCount
 	connection := GetConnection()
 	if connection == nil {
@@ -157,13 +158,14 @@ func AuthenticateID(ID string) bool {
 	if count != 1 {
 		return false
 	}
+	fmt.Println(count)
 	return true
 }
 
 //GetBook is used to get the Book data from the mongod server
-func GetBook(filter structure.GetBook) (*structure.BookData, bool) {
+func GetBook(filter structure.GetBook) (*structure.GetBookData, bool) {
 	conn := GetConnection()
-	var BookData structure.AddBook
+	var BookData structure.GetUniqueBook
 	if conn == nil {
 		return nil, false
 	}
@@ -189,7 +191,7 @@ func GetBook(filter structure.GetBook) (*structure.BookData, bool) {
 }
 
 //getNicknameByID is used to get
-func getNicknameByID(ctx context.Context, conn *mongo.Client, mobile string)(string, error){
+func getNicknameByID(ctx context.Context, conn *mongo.Client, mobile string) (string, error) {
 	filter := bson.M{"_id": mobile}
 	var Nickname structure.OnlyNickname
 	collection := conn.Database("new-bookpicker").Collection("USERDETAILS")
@@ -197,7 +199,7 @@ func getNicknameByID(ctx context.Context, conn *mongo.Client, mobile string)(str
 	if err != nil {
 		log.Println("error in inserting the data into the database", err)
 		//	conn.Disconnect(ctx)
-		return "",err
+		return "", err
 	}
 	return Nickname.Nickname, nil
 }
@@ -221,4 +223,77 @@ func EnterNickname(data structure.Nickname) bool {
 		return false
 	}
 	return true
+}
+
+//EnterComment is used to add the comment into the mongoDB
+func EnterComment(data structure.RequestComment) bool {
+	conn := GetConnection()
+	if conn == nil {
+		return false
+	}
+	ctx := context.TODO()
+	collection := conn.Database("new-bookpicker").Collection("USERDETAILS")
+	count, err := CountComments(ctx, collection, "8999326103", "12345")
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+
+	if count == 0 {
+		filter := bson.M{"_id": data.Mobile, "books.isbn": data.ISBN}
+		update := bson.M{"$set": bson.M{"books.$.comments": []interface{}{data.Comment}}}
+		_, err := collection.UpdateOne(ctx, filter, update)
+		if err != nil {
+			log.Println(err)
+			return false
+		}
+	} else {
+		filter := bson.M{"_id": data.Mobile, "books.isbn": data.ISBN}
+		update := bson.M{"$push": bson.M{"books.$.comments": data.Comment}}
+		_, err := collection.UpdateOne(ctx, filter, update)
+		if err != nil {
+			log.Println(err)
+			return false
+		}
+	}
+	return true
+}
+
+//CountComments is used to count the number of the comments of the particular document
+func CountComments(ctx context.Context, collection *mongo.Collection, id string, isbn string) (int, error) {
+	pipeline := []interface{}{bson.M{"$unwind": "$books"}, bson.M{"$match": bson.M{"$and": []interface{}{bson.M{"_id": id}, bson.M{"books.isbn": isbn}}}}, bson.M{"$unwind": "$books.comments"}, bson.M{"$count": "count"}} //db.USERDETAILS.aggregate({"$unwind":"$books"},{"$match":{"$and":[{"_id":"8999326103"},{"books.isbn":"12345"}]}},{"$unwind":"$books.comments"},{"$count":"comment_count"}).pretty()
+	var count structure.CommentCount
+	result, err := collection.Aggregate(ctx, pipeline)
+	for result.Next(ctx) {
+		err = result.Decode(&count)
+		if err != nil {
+			return 0, err
+		}
+	}
+	return count.Count, nil
+}
+
+//GetBooksByGenre is used to get the books by genre
+func GetBooksByGenre(data structure.RequestHomepage) ([]structure.HomepageObject, error) {
+	connection := GetConnection()
+	if connection == nil {
+		return nil, nil
+	}
+	ctx := context.TODO()
+	collection := connection.Database("new-bookpicker").Collection("USERDETAILS")
+	pipeline := []interface{}{bson.M{"$unwind": "$books"}, bson.M{"$match": bson.M{"books.genre": data.Genre}}, bson.M{"$skip": data.Skip}, bson.M{"$limit": data.Length}}
+	result, err := collection.Aggregate(ctx, pipeline)
+	if err != nil {
+		return nil, err
+	}
+	var Books []structure.HomepageObject
+	for result.Next(ctx) {
+		var Book *structure.HomepageObject
+		err := result.Decode(&Book)
+		if err != nil {
+			return nil, err
+		}
+		Books = append(Books, *Book)
+	}
+	return Books, nil
 }

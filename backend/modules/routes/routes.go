@@ -316,6 +316,126 @@ func DefaultResponse(rw http.ResponseWriter, header int, body structure.Response
 		fmt.Println("Error in sending the Response")
 		return false
 	}
-
 	return true
 }
+
+
+//AddCommentRoute is used
+func AddCommentRoute(rw http.ResponseWriter, req *http.Request){
+	setupResponse(rw, req)
+	if req.Method == "OPTIONS" {
+		return
+	}
+	/*	token := extractToken(req)
+	if !verifyToken(token) {
+		Response.Status = false
+		Response.Message = "error in decoding the request body"
+		if !getBookResponse(rw, http.StatusUnauthorized, Response) {
+			fmt.Println("Error in sending the response")
+			return
+		}
+		return
+	}
+	*/	
+	var Request structure.RequestComment
+	var Response structure.ResponseDefault
+	err := json.NewDecoder(req.Body).Decode(&Request)
+	if err != nil {
+		Response.Status = false
+		Response.Message = "Server unavailable"
+		fmt.Println("Error :=", err)
+		if !DefaultResponse(rw, 401, Response) {
+			fmt.Println("Error in sending the response")
+			return
+		}
+		return
+	}
+	if !connection.AuthenticateID(Request.Mobile) {
+		Response.Status = false
+		Response.Message = "user Invalid"
+		if !DefaultResponse(rw, http.StatusUnauthorized, Response) {
+			fmt.Println("Error in sending the response")
+			return
+		}
+		return
+	}
+	if !connection.EnterComment(Request){
+		Response.Status = false
+		Response.Message = "server unavailable, Try again"
+		if !DefaultResponse(rw, http.StatusUnauthorized, Response) {
+			fmt.Println("Error in sending the response")
+			return
+		}
+		return
+	}
+	Response.Status = true
+	Response.Message = "succesfully added comment"
+	if !DefaultResponse(rw, http.StatusOK, Response) {
+		fmt.Println("Error in sending the response")
+		return
+	}
+}
+
+//HomePageRoute is used for /homePage
+func HomePageRoute(rw http.ResponseWriter, req *http.Request){
+	setupResponse(rw, req)
+	if req.Method == "OPTIONS" {
+		return
+	}
+	/*	token := extractToken(req)
+	if !verifyToken(token) {
+		Response.Status = false
+		Response.Message = "error in decoding the request body"
+		if !getBookResponse(rw, http.StatusUnauthorized, Response) {
+			fmt.Println("Error in sending the response")
+			return
+		}
+		return
+	}
+	*/	
+	var Request structure.RequestHomepage
+	var Response structure.HomepageResponse
+	err := json.NewDecoder(req.Body).Decode(&Request)
+	if err != nil {
+		Response.Status = false
+		Response.Message = "Server unavailable"
+		fmt.Println("Error :=", err)
+		if !HomePageResponse(rw, 401, Response) {
+			fmt.Println("Error in sending the response")
+			return
+		}
+		return
+	}
+	Response.Body, err = connection.GetBooksByGenre(Request)
+	if err!=nil || Response.Body==nil{
+		Response.Status = false
+		Response.Message = "Server unavailable"
+		fmt.Println("Error :=", err)
+		if !HomePageResponse(rw, 401, Response) {
+			fmt.Println("Error in sending the response")
+			return
+		}
+		return
+	}
+	Response.Status = true
+	Response.Message = "Homepage books"
+	fmt.Println("Error :=", err)
+	if !HomePageResponse(rw, 200, Response) {
+		fmt.Println("Error in sending the response")
+		return
+	}
+	return
+}
+
+
+//HomePageResponse is used
+func HomePageResponse(rw http.ResponseWriter, header int, body structure.HomepageResponse) bool {
+	rw.WriteHeader(header)
+	err := json.NewEncoder(rw).Encode(body)
+	if err != nil {
+		fmt.Println("Error in sending the Response")
+		return false
+	}
+	return true
+}
+
